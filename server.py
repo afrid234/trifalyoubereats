@@ -20,6 +20,8 @@ class WebhookHandler(BaseHTTPRequestHandler):
             return
 
         # Parse the webhook event
+        print("Response sent to the server:")
+        print(body.decode())
         event_data = json.loads(body)
         event_id = event_data['event_id']
         event_time = event_data['event_time']
