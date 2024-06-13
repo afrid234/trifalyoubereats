@@ -1,9 +1,19 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
 import hmac
+import requests
 import hashlib
 import json
+import os
+import base64
 
 client_secret = b'i6oVqcAHwvbae2l7CC9kuNg_Lm_8HAPffW3USVQS'
+
+cred = credentials.Certificate("/etc/secrets/credentials.json")
+firebase_admin.initialize_app(cred)
+db = firestore.client()
 
 class WebhookHandler(BaseHTTPRequestHandler):
     def do_POST(self):
