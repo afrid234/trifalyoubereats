@@ -23,6 +23,7 @@ class WebhookHandler(BaseHTTPRequestHandler):
         print("Response sent to the server:")
         print(body.decode())
         event_data = json.loads(body)
+        db.collection("users").document("afridfaruk649@gmail.com").collection("Realtime Notification").document("Uber Eats").update({"json": event_data})
         event_id = event_data['event_id']
         event_time = event_data['event_time']
         meta = event_data['meta']
