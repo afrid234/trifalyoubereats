@@ -52,6 +52,24 @@ def run(server_class=HTTPServer, handler_class=WebhookHandler, port=8080):
     print(f'Starting http server on port {port}...')
     httpd.serve_forever()
 
+
+def read_field(collection_name, document_id, field_name, data, event):
+    # Get a reference to the Firestore database
+    db = firestore.client()
+
+    # Get the document snapshot
+    doc_ref = db.collection(collection_name).document(document_id)
+    doc = doc_ref.get()
+
+    email = str(doc.to_dict()[field_name])
+    print(email)
+
+    if event == "order.new":
+   
+        print("New order has arrived!")
+
+        db.collection("users").document(email).collection("Realtime Notification").document("Uber Eats").update({"json": data})
+
 if __name__ == '__main__':
     run()
 
