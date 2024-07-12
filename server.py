@@ -33,11 +33,11 @@ class WebhookHandler(BaseHTTPRequestHandler):
         print("Response sent to the server:")
         print(body.decode())
         event_data = json.loads(body)
-        db.collection("users").document("afridfaruk649@gmail.com").collection("Realtime Notification").document("Uber Eats").update({"json": event_data})
         event_id = event_data['event_id']
         event_time = event_data['event_time']
         meta = event_data['meta']
         user_id = meta['user_id']
+        read_field("Stores", "Uber Eats", user_id, body.decode())
         resource_id = meta['resource_id']
         status = meta['status']
         resource_href = event_data['resource_href']
@@ -53,7 +53,7 @@ def run(server_class=HTTPServer, handler_class=WebhookHandler, port=8080):
     httpd.serve_forever()
 
 
-def read_field(collection_name, document_id, field_name, data, event):
+def read_field(collection_name, document_id, field_name, data):
     # Get a reference to the Firestore database
     db = firestore.client()
 
@@ -63,12 +63,8 @@ def read_field(collection_name, document_id, field_name, data, event):
 
     email = str(doc.to_dict()[field_name])
     print(email)
-
-    if event == "order.new":
-   
-        print("New order has arrived!")
-
-        db.collection("users").document(email).collection("Realtime Notification").document("Uber Eats").update({"json": data})
+    print("New order has arrived!")
+    db.collection("users").document(email).collection("Realtime Notification").document("Uber Eats").update({"json": data})
 
 if __name__ == '__main__':
     run()
